@@ -1,9 +1,7 @@
-"use client";
-
-import { useEffect } from 'react';
-import * as THREE from 'three';
+import Link from 'next/link';
 
 export default function Home() {
+  /*
   useEffect(() => {
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -15,7 +13,7 @@ export default function Home() {
     const geometry = new THREE.BoxGeometry( 1, 1, 1 );
     const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
     const cube = new THREE.Mesh( geometry, material );
-    scene.add( cube );
+    scene.add(cube);
 
     camera.position.z = 5;
 
@@ -29,10 +27,17 @@ export default function Home() {
     }
     animate();
   }, []);
+  */
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between">
-
+    <main className="">
+      <div>
+        <Link href="/examples/1">Creating a scene</Link>
+        <Link href="/examples/2">WebGL compatibility check</Link>
+        <Link href="/examples/3">Drawing lines</Link>
+        <Link href="/examples/4">Creating text</Link>
+        <Link href="/examples/5">Loading 3D models</Link>
+      </div>
     </main>
   )
 }
