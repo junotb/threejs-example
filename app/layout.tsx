@@ -1,3 +1,4 @@
+import Sidebar from '@/components/sidebar'
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
@@ -17,9 +18,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={inter.className}
+        className={`${inter.className} flex`}
         suppressHydrationWarning={true}
-      >{children}</body>
+      >
+        <Sidebar />
+        {children}
+      </body>
     </html>
   )
 }
