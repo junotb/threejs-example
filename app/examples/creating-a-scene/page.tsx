@@ -2,37 +2,54 @@
 
 import { useEffect } from 'react';
 import * as THREE from 'three';
+import WebGL from 'three/examples/jsm/capabilities/WebGL.js';
 
 export default function Page() {
   useEffect(() => {
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    
-    const renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    if (WebGL.isWebGLAvailable()) {
+      const width = 768;
+      const height = 768;
 
-    const main = document.getElementsByTagName('main')[0];
-    main.appendChild(renderer.domElement);
-
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    const cube = new THREE.Mesh(geometry, material);
-    scene.add(cube);
-
-    camera.position.z = 5;
-
-    const animate = () => {
-      requestAnimationFrame(animate);
-
-      cube.rotation.x += 0.01;
-      cube.rotation.y += 0.01;
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 2000);
+      camera.position.z = 5;
       
-      renderer.render(scene, camera);
+      const renderer = new THREE.WebGLRenderer();
+      renderer.setSize(width, height);
+
+      const main = document.getElementsByTagName('main')[0];
+      main.appendChild(renderer.domElement);
+      
+      const group = new THREE.Group();
+
+      const geometry = new THREE.BoxGeometry(1, 1, 1);
+      const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
+      group.add(new THREE.LineSegments(geometry, lineMaterial));
+
+      const meshMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      group.add(new THREE.Mesh(geometry, meshMaterial));
+
+      scene.add(group);
+
+      const animate = () => {
+        requestAnimationFrame(animate);
+
+        group.rotation.x += 0.01;
+        group.rotation.y += 0.01;
+        
+        renderer.render(scene, camera);
+      }
+      animate();
+    } else {
+      const warning = WebGL.getWebGLErrorMessage();
+      const main = document.getElementsByTagName('main')[0];
+      main.appendChild(warning);
     }
-    animate();
   }, []);
 
   return (
-    <main></main>
+    <main className="flex justify-center items-center w-full min-h-screen">
+      
+    </main>
   )
 }
