@@ -18,7 +18,7 @@ export default function Page() {
     const init = () => {
       sceneRef.current = new THREE.Scene();
       //sceneRef.current.background = new THREE.Color(0xffffff);
-      cameraRef.current = new THREE.PerspectiveCamera(45, width / height, 0.25, 20);
+      cameraRef.current = new THREE.PerspectiveCamera(50, width / height, 0.1, 2000);
       cameraRef.current.position.z = 5;
       
       rendererRef.current = new THREE.WebGLRenderer();
@@ -34,7 +34,7 @@ export default function Page() {
       });
       
       //sceneRef.current.add(new THREE.AmbientLight(0xffffff));
-      sceneRef.current.add(new THREE.DirectionalLight(0xffffff, 0.5));
+      sceneRef.current.add(new THREE.DirectionalLight(0xffffff, 1));
 
       const controls = new OrbitControls(cameraRef.current, rendererRef.current.domElement);
       controls.addEventListener('change', render); // use if there is no animation loop
