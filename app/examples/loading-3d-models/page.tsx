@@ -1,45 +1,42 @@
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import WebGL from 'three/addons/capabilities/WebGL.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 export default function Page() {
+  const cameraRef = useRef<THREE.PerspectiveCamera>();
+  const sceneRef = useRef<THREE.Scene>();
+  const rendererRef = useRef<THREE.WebGLRenderer>();
+  
   useEffect(() => {
     const width = 768;
     const height = 768;
 
-    let camera: THREE.PerspectiveCamera;
-    let scene: THREE.Scene;
-    let renderer: THREE.WebGLRenderer;
-
     const init = () => {
-
-      scene = new THREE.Scene();
-      camera = new THREE.PerspectiveCamera(45, width / height, 0.25, 20);
-      camera.position.set(-1.8, 0.6, 2.7);
+      sceneRef.current = new THREE.Scene();
+      //sceneRef.current.background = new THREE.Color(0xffffff);
+      cameraRef.current = new THREE.PerspectiveCamera(45, width / height, 0.25, 20);
+      cameraRef.current.position.z = 5;
       
-      renderer = new THREE.WebGLRenderer({ antialias: true });
-      renderer.setPixelRatio(window.devicePixelRatio);
-      renderer.setSize(width, height);
-      renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1;
+      rendererRef.current = new THREE.WebGLRenderer();
+      rendererRef.current.setSize(width, height);
 
       const main = document.getElementsByTagName('main')[0];
-      main.appendChild(renderer.domElement);
-
-      render();
+      main.appendChild(rendererRef.current.domElement);
 
       const loader = new GLTFLoader().setPath('/models/Duck/glTF/');
       loader.load('Duck.gltf', (gltf) => {
-        scene.add(gltf.scene);
+        sceneRef.current!.add(gltf.scene);
         render();
       });
+      
+      //sceneRef.current.add(new THREE.AmbientLight(0xffffff));
+      sceneRef.current.add(new THREE.DirectionalLight(0xffffff, 0.5));
 
-
-      const controls = new OrbitControls(camera, renderer.domElement);
+      const controls = new OrbitControls(cameraRef.current, rendererRef.current.domElement);
       controls.addEventListener('change', render); // use if there is no animation loop
       controls.minDistance = 2;
       controls.maxDistance = 10;
@@ -50,17 +47,17 @@ export default function Page() {
     }
 
     const onWindowResize = () => {
-      camera.aspect = width / height;
-      camera.updateProjectionMatrix();
+      cameraRef.current!.aspect = width / height;
+      cameraRef.current!.updateProjectionMatrix();
 
-      renderer.setSize(width, height);
+      rendererRef.current!.setSize(width, height);
 
       render();
     }
 
     const render = () => {
-      if(renderer) {
-        renderer.render(scene, camera);
+      if(rendererRef.current) {
+        rendererRef.current.render(sceneRef.current!, cameraRef.current!);
       }
     }
 
@@ -75,6 +72,8 @@ export default function Page() {
   }, []);
 
   return (
-    <main></main>
+    <main className="flex justify-center items-center w-full min-h-screen">
+      
+    </main>
  )
 }

@@ -56,6 +56,8 @@ export default function Page() {
   }, []);
 
   return (
-    <main></main>
+    <main className="flex justify-center items-center w-full min-h-screen">
+      
+    </main>
   )
 }
